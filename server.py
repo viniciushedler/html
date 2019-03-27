@@ -9,7 +9,7 @@ def init():
     return render_template('inicio.html')
 
 @app.route('/form_cadastrar')
-def form_cadastrar():
+def  abre_form_cadastrar():
     return render_template('form_cadastrar.html')
 
 @app.route('/cadastrar_pessoa')
@@ -28,9 +28,13 @@ def listar_pessoas():
     txt = arq.read()
     lista_pessoas = []
     cont_arq = txt.split(';')
+    dados = []
     for i in cont_arq:
-        i.split(',')
-    for dados_pessoa in cont_arq:
+        if i=='':
+            cont_arq.remove(i)
+        else:
+            dados.append(i.split(','))
+    for dados_pessoa in dados:
         lista_pessoas.append(Pessoa(dados_pessoa[0], dados_pessoa[1]))
     return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas)
 

@@ -8,10 +8,11 @@
     <link rel="stylesheet" type="text/css" media="screen" href="listar_pessoas.css" />
 </head>
 <body>
-    <a href=cadastrar_pessoa>Cadastrar</a>
     {%for pessoa in lista_pessoas:%}
         {{pessoa.nome}}<br>
+        {{pessoa.idade}}<br>
     {%endfor%}
+    <a href=form_cadastrar>Cadastrar</a>
 
 
 </body>
