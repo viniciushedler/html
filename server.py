@@ -1,5 +1,12 @@
 from flask import Flask, render_template, request
 from pessoa import Pessoa
+from gbd import GBD
+
+servidor = '127.0.0.1'
+usuario = 'root'
+senha = 'root'
+bd = 'html'
+gbd = GBD(servidor, usuario, senha, bd)
 
 app = Flask(__name__)
 
