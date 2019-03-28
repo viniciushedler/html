@@ -43,7 +43,7 @@ def listar_pessoas():
             dados.append(i.split(','))
     for dados_pessoa in dados:
         lista_pessoas.append(Pessoa(dados_pessoa[0], dados_pessoa[1]))
-    return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas)
+    return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas, lista_index=range(len(lista_pessoas)))
 
 
 
