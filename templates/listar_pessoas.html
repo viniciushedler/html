@@ -25,17 +25,21 @@
             <th></th>
             <th>Nome</th>
             <th>Idade</th>
+            <th>Deletar</th>
         </tr>
         {%for index in lista_index:%}
             <tr>
                 <th>{{index+1}}</th>
                 <th>{{lista_pessoas[index].nome}}</th>
                 <th>{{lista_pessoas[index].idade}}</th>
+                <th style='text-align: center'><a href='/deletar_pessoa?pessoa={{lista_pessoas[index]}}'>X</a></th>
             </tr>
         {%endfor%}
     </table>
     <br>
     <a href=form_cadastrar>Cadastrar</a>
+    <br>
+    {{lista}}
 
 </body>
 </html>

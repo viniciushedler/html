@@ -1,4 +1,5 @@
 import MySQLdb
+from pessoa import Pessoa
 
 class GBD():
     '''meu gerenciador de bd para python'''
@@ -37,4 +38,18 @@ class GBD():
     
     def inserir_pessoa(self, pessoa):
         self.cursor.execute("INSERT INTO pessoa (nome, idade) VALUES ('{}','{}')".format(pessoa.nome,pessoa.idade))
-        
+        self.con.commit()
+
+    def listar_pessoas(self):
+        qtd_resultados = self.cursor.execute('SELECT * FROM pessoa')
+        lista_pessoas = []
+        for cont in range(qtd_resultados):
+            dados = self.cursor.fetchone()
+            pessoa = Pessoa(dados[0], dados[1])
+            lista_pessoas.append(pessoa)
+        return lista_pessoas
+    
+
+    def deletar_pessoa(self, nome):
+        self.cursor.execute("delete from pessoa where nome={}".format(nome))
+        self.con.commit()        

@@ -29,20 +29,27 @@ def cadastrar():
 
 @app.route('/listar_pessoas')
 def listar_pessoas():
-    arq = open("valores.txt", "r")
-    txt = arq.read()
-    lista_pessoas = []
-    cont_arq = txt.split(';')
-    dados = []
-    for i in cont_arq:
-        if i=='':
-            cont_arq.remove(i)
-        else:
-            dados.append(i.split(','))
-    for dados_pessoa in dados:
-        lista_pessoas.append(Pessoa(dados_pessoa[0], dados_pessoa[1]))
+    lista_pessoas = gbd.listar_pessoas()
+    # arq = open("valores.txt", "r")
+    # txt = arq.read()
+    # lista_pessoas = []
+    # cont_arq = txt.split(';')
+    # dados = []
+    # for i in cont_arq:
+    #     if i=='':
+    #         cont_arq.remove(i)
+    #     else:
+    #         dados.append(i.split(','))
+    # for dados_pessoa in dados:
+    #     lista_pessoas.append(Pessoa(dados_pessoa[0], dados_pessoa[1]))
     return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas, lista_index=range(len(lista_pessoas)))
 
+@app.route('/deletar_pessoa')
+def deletar_pessoa():
+    nome = request.args.get('nome')
+    gbd.deletar_pessoa(nome)
+    lista_pessoas = gbd.listar_pessoas()
+    return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas, lista_index=range(len(lista_pessoas)))
 
 
 app.run()
