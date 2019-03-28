@@ -35,6 +35,6 @@ class GBD():
         '''
         self.cursor.execute('CREATE TABLE IF NOT EXISTS {}({})'.format(nome_tabela, atributos))
     
-    def inserir_pessoa(self, nome, idade):
-        self.cursor.execute('INSERT INTO pessoa VALUES ({},{})'.format(nome,idade))
+    def inserir_pessoa(self, pessoa):
+        self.cursor.execute("INSERT INTO pessoa (nome, idade) VALUES ('{}','{}')".format(pessoa.nome,pessoa.idade))
         

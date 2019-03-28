@@ -24,9 +24,7 @@ def cadastrar():
     nome = request.args.get('nome')
     idade = request.args.get('idade')
     pessoa = Pessoa(nome, idade)
-    arq = open('valores.txt', 'a')
-    arq.write("{},{};".format(nome,idade))
-    arq.close()
+    gbd.inserir_pessoa(pessoa)
     return render_template('exibir_mensagem.html', pessoa=pessoa)
 
 @app.route('/listar_pessoas')
