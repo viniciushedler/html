@@ -23,7 +23,16 @@ def  abre_form_cadastrar():
 def cadastrar():
     nome = request.args.get('nome')
     idade = request.args.get('idade')
-    pessoa = Pessoa(nome, idade)
+    lista_pessoas=gbd.listar_pessoas()
+    for cod in range(len(lista_pessoas)+1):
+        unico = True
+        for pessoa in lista_pessoas:
+            if cod==pessoa.cod:
+                unico = False
+                break
+        if unico:
+            codigo = cod
+    pessoa = Pessoa(codigo ,nome, idade)
     gbd.inserir_pessoa(pessoa)
     return render_template('exibir_mensagem.html', pessoa=pessoa)
 
@@ -46,10 +55,10 @@ def listar_pessoas():
 
 @app.route('/deletar_pessoa')
 def deletar_pessoa():
-    nome = request.args.get('nome')
-    gbd.deletar_pessoa(nome)
+    cod = request.args.get('cod')
+    gbd.deletar_pessoa(cod)
     lista_pessoas = gbd.listar_pessoas()
     return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas, lista_index=range(len(lista_pessoas)))
 
 
-app.run()
+app.run(host='0.0.0.0')

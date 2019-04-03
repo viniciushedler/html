@@ -12,7 +12,6 @@ class GBD():
         self.con.select_db(bd)
         self.criar_tabela()
 
-
     def login(self, servidor, usuario, senha, bd):
         if servidor=='':
             servidor = input('Servidor: ')
@@ -26,18 +25,18 @@ class GBD():
         self.usuario = usuario
         self.senha = senha
         self.bd = bd
-
-    
+  
     def criar_tabela(self):
         nome_tabela = 'pessoa'
         atributos = '''
+        cod INT,
         nome VARCHAR(60) not null,
         idade INT(3) not null
         '''
         self.cursor.execute('CREATE TABLE IF NOT EXISTS {}({})'.format(nome_tabela, atributos))
     
     def inserir_pessoa(self, pessoa):
-        self.cursor.execute("INSERT INTO pessoa (nome, idade) VALUES ('{}','{}')".format(pessoa.nome,pessoa.idade))
+        self.cursor.execute("INSERT INTO pessoa (cod, nome, idade) VALUES ('{}','{}','{}')".format(pessoa.cod, pessoa.nome,pessoa.idade))
         self.con.commit()
 
     def listar_pessoas(self):
@@ -45,11 +44,10 @@ class GBD():
         lista_pessoas = []
         for cont in range(qtd_resultados):
             dados = self.cursor.fetchone()
-            pessoa = Pessoa(dados[0], dados[1])
+            pessoa = Pessoa(dados[0], dados[1], dados[2])
             lista_pessoas.append(pessoa)
         return lista_pessoas
-    
 
-    def deletar_pessoa(self, nome):
-        self.cursor.execute("delete from pessoa where nome={}".format(nome))
+    def deletar_pessoa(self, cod):
+        self.cursor.execute("delete from pessoa where cod='{}'".format(cod))
         self.con.commit()        
