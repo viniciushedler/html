@@ -17,7 +17,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="listar_pessoas.css" /> -->
 </head>
 <body>
     <table>
@@ -25,13 +24,13 @@
             <th>Index</th>
             <th>Nome</th>
             <th>Idade</th>
-            <th>Deletar</th>
         </tr>
         {%for index in lista_index:%}
             <tr>
                 <th>{{lista_pessoas[index].cod}}</th>
                 <th>{{lista_pessoas[index].nome}}</th>
                 <th>{{lista_pessoas[index].idade}}</th>
+                <th style='text-align: center;'><a href='/form_editar?cod={{lista_pessoas[index].cod}}'>Editar</a></th>
                 <th style='text-align: center'><a href='/deletar_pessoa?cod={{lista_pessoas[index].cod}}'>X</a></th>
             </tr>
         {%endfor%}

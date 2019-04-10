@@ -39,18 +39,6 @@ def cadastrar():
 @app.route('/listar_pessoas')
 def listar_pessoas():
     lista_pessoas = gbd.listar_pessoas()
-    # arq = open("valores.txt", "r")
-    # txt = arq.read()
-    # lista_pessoas = []
-    # cont_arq = txt.split(';')
-    # dados = []
-    # for i in cont_arq:
-    #     if i=='':
-    #         cont_arq.remove(i)
-    #     else:
-    #         dados.append(i.split(','))
-    # for dados_pessoa in dados:
-    #     lista_pessoas.append(Pessoa(dados_pessoa[0], dados_pessoa[1]))
     return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas, lista_index=range(len(lista_pessoas)))
 
 @app.route('/deletar_pessoa')
@@ -60,5 +48,26 @@ def deletar_pessoa():
     lista_pessoas = gbd.listar_pessoas()
     return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas, lista_index=range(len(lista_pessoas)))
 
+@app.route('/form_editar')
+def form_editar_pessoa():
+    cod = request.args.get('cod')
+    pessoa = gbd.buscar_pessoa(cod)
+    return render_template('form_editar.html', pessoa=pessoa)
+
+@app.route('/editar_pessoa')
+def editar_pessoa():
+    nome = request.args.get('nome')
+    idade = request.args.get('idade')
+    cod = request.args.get('cod')
+    print(cod)
+    pessoa = gbd.buscar_pessoa(cod)
+    if nome=='':
+        nome = pessoa.nome
+    if idade=='':
+        idade=pessoa.idade
+    pessoa = Pessoa(cod,nome,idade)
+    gbd.deletar_pessoa(cod)
+    gbd.inserir_pessoa(pessoa)
+    return render_template('exibir_mensagem.html', pessoa=pessoa)
 
 app.run(host='0.0.0.0')

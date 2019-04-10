@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Form Cadastrar</title>
+        <link rel="stylesheet" type="text/css" media="screen" href="/static/form_editar.css" />
+    </head>
+    <body>
+        Nome: {{pessoa.nome}}<br>
+        Idade: {{pessoa.idade}}<br>
+        <br>
+        <form action="editar_pessoa">
+            Nome: <input type=text name=nome> <br>
+            Idade: <input type=text name=idade> <br>
+            <input type='hidden' name='cod' value='{{pessoa.cod}}'>
+            <br>
+            <input type=submit value=Alterar>
+        </form>
+        <br>
+        <a href="/listar_pessoas">Index</a>
+    </body>
+</html>
