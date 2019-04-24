@@ -52,8 +52,8 @@ class GBD():
         self.cursor.execute("delete from pessoa where cod='{}'".format(cod))
         self.con.commit()        
 
-    def buscar_pessoa(self, cod):
-        self.cursor.execute("select * from pessoa where cod={}".format(cod))
+    def buscar_pessoa(self, valor, atributo='cod'):
+        self.cursor.execute("select * from pessoa where {}={}".format(atributo,valor))
         dados = self.cursor.fetchone()
         pessoa = Pessoa(dados[0], dados[1], dados[2])
         return pessoa

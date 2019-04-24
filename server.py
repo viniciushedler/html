@@ -70,4 +70,14 @@ def editar_pessoa():
     gbd.inserir_pessoa(pessoa)
     return render_template('exibir_mensagem.html', pessoa=pessoa)
 
+@app.route('/form_login')
+def form_login():
+    return render_template('form_login.html')
+
+@app.route('/login')
+def login():
+    user = request.args.get('user')
+    senha = request.args.get('senha')
+    gbd.buscar_pessoa(user, 'nome')
+
 app.run(host='0.0.0.0')
