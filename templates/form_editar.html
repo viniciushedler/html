@@ -8,10 +8,12 @@
     <body>
         Nome: {{pessoa.nome}}<br>
         Idade: {{pessoa.idade}}<br>
+        Senha: {{pessoa.senha}}<br>
         <br>
         <form action="editar_pessoa">
             Nome: <input type=text name=nome> <br>
             Idade: <input type=text name=idade> <br>
+            Senha: <input type=text name=senha> <br>
             <input type='hidden' name='cod' value='{{pessoa.cod}}'>
             <br>
             <input type=submit value=Alterar>

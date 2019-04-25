@@ -4,9 +4,9 @@ from gbd import GBD
 
 servidor = '127.0.0.1'
 usuario = 'root'
-senha = 'root'
+senha_gbd = 'root'
 bd = 'html'
-gbd = GBD(servidor, usuario, senha, bd)
+gbd = GBD(servidor, usuario, senha_gbd, bd)
 
 app = Flask(__name__)
 
@@ -23,6 +23,7 @@ def  abre_form_cadastrar():
 def cadastrar():
     nome = request.args.get('nome')
     idade = request.args.get('idade')
+    senha = request.args.get('senha')
     lista_pessoas=gbd.listar_pessoas()
     for cod in range(len(lista_pessoas)+1):
         unico = True
@@ -32,7 +33,7 @@ def cadastrar():
                 break
         if unico:
             codigo = cod
-    pessoa = Pessoa(codigo ,nome, idade)
+    pessoa = Pessoa(codigo ,nome, idade, senha)
     gbd.inserir_pessoa(pessoa)
     return render_template('exibir_mensagem.html', pessoa=pessoa)
 
@@ -59,13 +60,16 @@ def editar_pessoa():
     nome = request.args.get('nome')
     idade = request.args.get('idade')
     cod = request.args.get('cod')
+    senha = request.args.get('senha')
     print(cod)
     pessoa = gbd.buscar_pessoa(cod)
     if nome=='':
         nome = pessoa.nome
     if idade=='':
         idade=pessoa.idade
-    pessoa = Pessoa(cod,nome,idade)
+    if senha=='':
+        senha = pessoa.senha
+    pessoa = Pessoa(cod,nome,idade, senha)
     gbd.deletar_pessoa(cod)
     gbd.inserir_pessoa(pessoa)
     return render_template('exibir_mensagem.html', pessoa=pessoa)
@@ -78,6 +82,9 @@ def form_login():
 def login():
     user = request.args.get('user')
     senha = request.args.get('senha')
-    gbd.buscar_pessoa(user, 'nome')
+    pessoa = gbd.buscar_pessoa(user, 'nome')
+    if senha==pessoa.senha:
+        .
+
 
 app.run(host='0.0.0.0')

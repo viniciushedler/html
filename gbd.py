@@ -10,7 +10,10 @@ class GBD():
         self.cursor = self.con.cursor()
         self.cursor.execute('CREATE SCHEMA IF NOT EXISTS {} COLLATE latin1_general_cs'.format(bd))
         self.con.select_db(bd)
-        self.criar_tabela()
+        self.criar_tabelas()
+    
+    def drop(self):
+        self.cursor.execute('drop schema html')
 
     def login(self, servidor, usuario, senha, bd):
         if servidor=='':
@@ -26,17 +29,25 @@ class GBD():
         self.senha = senha
         self.bd = bd
   
-    def criar_tabela(self):
+    def criar_tabelas(self):
         nome_tabela = 'pessoa'
         atributos = '''
         cod INT,
         nome VARCHAR(60) not null,
-        idade INT(3) not null
+        idade INT(3) not null,
+        senha VARCHAR(60) not null
         '''
         self.cursor.execute('CREATE TABLE IF NOT EXISTS {}({})'.format(nome_tabela, atributos))
+
+        nome_tabela = 'usuario'
+        atributos = '''
+        cod INT
+        '''
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS {}({})'.format(nome_tabela, atributos))
+
     
     def inserir_pessoa(self, pessoa):
-        self.cursor.execute("INSERT INTO pessoa (cod, nome, idade) VALUES ('{}','{}','{}')".format(pessoa.cod, pessoa.nome,pessoa.idade))
+        self.cursor.execute("INSERT INTO pessoa (cod, nome, idade, senha) VALUES ('{}','{}','{}','{}')".format(pessoa.cod, pessoa.nome,pessoa.idade, pessoa.senha))
         self.con.commit()
 
     def listar_pessoas(self):
@@ -44,7 +55,7 @@ class GBD():
         lista_pessoas = []
         for cont in range(qtd_resultados):
             dados = self.cursor.fetchone()
-            pessoa = Pessoa(dados[0], dados[1], dados[2])
+            pessoa = Pessoa(dados[0], dados[1], dados[2], dados[3])
             lista_pessoas.append(pessoa)
         return lista_pessoas
 
@@ -55,5 +66,8 @@ class GBD():
     def buscar_pessoa(self, valor, atributo='cod'):
         self.cursor.execute("select * from pessoa where {}={}".format(atributo,valor))
         dados = self.cursor.fetchone()
-        pessoa = Pessoa(dados[0], dados[1], dados[2])
+        pessoa = Pessoa(dados[0], dados[1], dados[2], dados[3])
         return pessoa
+    
+    def login_usuario(self, cod):
+        self.cursor.execute("update 'usuario' set 'cod'={}".format(cod))
