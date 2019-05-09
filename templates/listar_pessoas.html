@@ -19,9 +19,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <form action='form_login'>
-        <button type='submit'>Login</button>
-    </form>
     <table>
         <tr>
             <th>Index</th>
@@ -33,8 +30,12 @@
                 <th>{{lista_pessoas[index].cod}}</th>
                 <th>{{lista_pessoas[index].nome}}</th>
                 <th>{{lista_pessoas[index].idade}}</th>
-                <th style='text-align: center;'><a href='/form_editar?cod={{lista_pessoas[index].cod}}'>Editar</a></th>
-                <th style='text-align: center'><a href='/deletar_pessoa?cod={{lista_pessoas[index].cod}}'>X</a></th>
+                {%if usuario.cod!=-1:%}
+                    {%if usuario.cod==lista_pessoas[index].cod:%}
+                    <th style='text-align: center;'><a href='/form_editar?cod={{lista_pessoas[index].cod}}'>Editar</a></th>
+                    <th style='text-align: center'><a href='/deletar_pessoa?cod={{lista_pessoas[index].cod}}'>X</a></th>
+                    {%endif%}
+                {%endif%}
             </tr>
         {%endfor%}
     </table>
@@ -42,6 +43,17 @@
     <a href=form_cadastrar>Cadastrar</a>
     <br>
     {{lista}}
+    <br>
+    {%if usuario==None:%}
+        <form action='form_login'>
+            <button type='submit'>Login</button>
+        </form>
+    {%else:%}
+        {{usuario.nome}}        
+        <form action='logout'>
+            <button type='submit'>Logout</button>
+        </form>
+    {%endif%}
 
 </body>
 </html>

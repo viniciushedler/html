@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from pessoa import Pessoa
 from gbd import GBD
 
@@ -40,7 +40,11 @@ def cadastrar():
 @app.route('/listar_pessoas')
 def listar_pessoas():
     lista_pessoas = gbd.listar_pessoas()
-    return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas, lista_index=range(len(lista_pessoas)))
+    cod_usuario = gbd.get_cod_usuario()
+    usuario = None
+    if cod_usuario!=-1:
+        usuario = gbd.querry('pessoa', cod_usuario)
+    return render_template("listar_pessoas.html", lista_pessoas=lista_pessoas, lista_index=range(len(lista_pessoas)), usuario=usuario)
 
 @app.route('/deletar_pessoa')
 def deletar_pessoa():
@@ -52,7 +56,7 @@ def deletar_pessoa():
 @app.route('/form_editar')
 def form_editar_pessoa():
     cod = request.args.get('cod')
-    pessoa = gbd.buscar_pessoa(cod)
+    pessoa = gbd.querry('pessoa',cod)
     return render_template('form_editar.html', pessoa=pessoa)
 
 @app.route('/editar_pessoa')
@@ -62,7 +66,7 @@ def editar_pessoa():
     cod = request.args.get('cod')
     senha = request.args.get('senha')
     print(cod)
-    pessoa = gbd.buscar_pessoa(cod)
+    pessoa = gbd.querry('pessoa', cod)
     if nome=='':
         nome = pessoa.nome
     if idade=='':
@@ -82,9 +86,16 @@ def form_login():
 def login():
     user = request.args.get('user')
     senha = request.args.get('senha')
-    pessoa = gbd.buscar_pessoa(user, 'nome')
+    pessoa = gbd.querry('pessoa', user, 'nome')
     if senha==pessoa.senha:
-        .
+        print('conectou')
+        gbd.login_usuario(pessoa)
+        return redirect('/listar_pessoas')
+    return render_template('form_login.html')
 
+@app.route('/logout')
+def logout():
+    gbd.logout_usuario()
+    return redirect('/listar_pessoas')
 
 app.run(host='0.0.0.0')

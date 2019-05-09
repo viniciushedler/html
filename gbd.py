@@ -1,5 +1,6 @@
 import MySQLdb
 from pessoa import Pessoa
+from tabela import Tabela
 
 class GBD():
     '''meu gerenciador de bd para python'''
@@ -10,10 +11,33 @@ class GBD():
         self.cursor = self.con.cursor()
         self.cursor.execute('CREATE SCHEMA IF NOT EXISTS {} COLLATE latin1_general_cs'.format(bd))
         self.con.select_db(bd)
-        self.criar_tabelas()
+        self.criar_texto_tabelas()
+        self.criar_tabelas_bd()
+        self.conectar_usuario_init()
     
-    def drop(self):
-        self.cursor.execute('drop schema html')
+    def conectar_usuario_init(self):
+        self.cursor.execute('select count(*) from usuario')
+        n = self.cursor.fetchone()
+        if n[0]==0:
+            self.cursor.execute('insert into usuario values (-1)')
+            self.con.commit()
+
+
+    def criar_texto_tabelas(self):
+        self.tabelas = []
+        tabela = Tabela('pessoa',
+        '''
+        cod INT,
+        nome VARCHAR(60) not null,
+        idade INT(3) not null,
+        senha VARCHAR(60) not null
+        ''')
+        self.tabelas.append(tabela)
+        tabela = Tabela('usuario',
+        '''
+        cod INT
+        ''')
+        self.tabelas.append(tabela)
 
     def login(self, servidor, usuario, senha, bd):
         if servidor=='':
@@ -29,22 +53,9 @@ class GBD():
         self.senha = senha
         self.bd = bd
   
-    def criar_tabelas(self):
-        nome_tabela = 'pessoa'
-        atributos = '''
-        cod INT,
-        nome VARCHAR(60) not null,
-        idade INT(3) not null,
-        senha VARCHAR(60) not null
-        '''
-        self.cursor.execute('CREATE TABLE IF NOT EXISTS {}({})'.format(nome_tabela, atributos))
-
-        nome_tabela = 'usuario'
-        atributos = '''
-        cod INT
-        '''
-        self.cursor.execute('CREATE TABLE IF NOT EXISTS {}({})'.format(nome_tabela, atributos))
-
+    def criar_tabelas_bd(self):
+        for tabela in self.tabelas:
+            self.cursor.execute('CREATE TABLE IF NOT EXISTS {}({})'.format(tabela.nome, tabela.atributos))
     
     def inserir_pessoa(self, pessoa):
         self.cursor.execute("INSERT INTO pessoa (cod, nome, idade, senha) VALUES ('{}','{}','{}','{}')".format(pessoa.cod, pessoa.nome,pessoa.idade, pessoa.senha))
@@ -63,11 +74,25 @@ class GBD():
         self.cursor.execute("delete from pessoa where cod='{}'".format(cod))
         self.con.commit()        
 
-    def buscar_pessoa(self, valor, atributo='cod'):
-        self.cursor.execute("select * from pessoa where {}={}".format(atributo,valor))
+    def querry(self, tabela, valor, atributo='cod'):
+        '''
+        querry(tabela, valor, atributo='cod')
+        select from TABELA where VALOR=ATRIBUTO
+        '''
+        self.cursor.execute("select * from {} where {}='{}'".format(tabela,atributo,valor))
         dados = self.cursor.fetchone()
         pessoa = Pessoa(dados[0], dados[1], dados[2], dados[3])
         return pessoa
-    
-    def login_usuario(self, cod):
-        self.cursor.execute("update 'usuario' set 'cod'={}".format(cod))
+        
+    def login_usuario(self, pessoa):
+        self.cursor.execute("update usuario set cod={}".format(pessoa.cod))
+        self.con.commit()
+
+    def logout_usuario(self):
+        self.cursor.execute("update usuario set cod=-1")
+        self.con.commit()
+
+    def get_cod_usuario(self):
+        self.cursor.execute('select * from usuario')
+        cod_usuario = self.cursor.fetchone()
+        return cod_usuario[0]
